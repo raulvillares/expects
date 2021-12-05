@@ -1276,3 +1276,41 @@ raise_error
     :class: error
 
     Expected ``<function callback at 0x7fe70cb103b0>`` to raise ``AttributeError`` with message ``'foo'`` but message was ``'bar'``
+
+have_decorator
+--------------
+
+.. code-block:: python
+
+    def my_decorator(func):
+        @wraps(func)
+        def wrapper_func(*args, **kwargs):
+            func(*args, **kwargs)
+        return wrapper_func
+
+    @decorator
+    def callback():
+        pass
+
+    expect(callback).to(have_decorator("@my_decorator"))
+
+    expect(callback).not_to(have_decorator("@my_decorator"))
+
+.. admonition:: Failure
+    :class: error
+
+    Expected: ``<function function_with_decorator at 0x108207ee0>`` not to have decorator ``@dummy_decorator`` but: ``@dummy_decorator`` decorator found
+
+.. code-block:: python
+
+    def call_back():
+        pass
+
+    expect(callback).not_to(have_decorator("@my_decorator"))
+
+    expect(callback).to(have_decorator("@my_decorator"))
+
+.. admonition:: Failure
+    :class: error
+
+    Expected: ``<function function_without_decorator at 0x10527bf70>`` to have decorator ``@dummy_decorator`` but: ``@dummy_decorator`` decorator not found in ``[]``
